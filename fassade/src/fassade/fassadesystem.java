@@ -12,38 +12,43 @@ import java.util.Scanner;
 import subsystem.*;
 
 public class fassadesystem {
-	String en_str = null;
-	String de_str = null;
-	String com_str = null;
-	String decom_str = null;
-	
-	String path ="filename.txt";
-	
-	encodeDecode objen = new encodeDecode();
-	compressDecompress objcom = new compressDecompress();
-	writeFile objw = new writeFile();
-	readFile objr = new readFile();
-	encodeDecode objde = new encodeDecode();
-	compressDecompress objdecom = new compressDecompress();
-	 
-	    public void encodecompresswrite(String path, String str1)
-	    {
-	    	en_str   = objen.encode(str1);
-	    	comp_str = objcom.compress(en_str);
-	    	objw.writef(path,comp_str);
-	    }
-	    
-	    public void decodedecompressread(String str)
-	    {
-	    	decom_str = objr.read(str);
-	    	de_str    = objde.decompress()
-	    	
-	    }
-	    
-	 public static void main(String[] args) {
-		 String testStr = "baba_baba_baba_baba_baba_baba_baba_baba_baba_baba_baba_baba_baba_baba_baba_";
-			
-		 encodecompresswrite(path,testStr);
-		 decodedecompressread(testStr);
+	private static String en_str = null;
+	private static String de_str = null;
+	private static byte[] com_str;
+	private static String decom_str = null;
+	private static String path = "filename.txt";
+	private static byte[] restr;
+
+	private static encodeDecode endeobj = new encodeDecode();
+	private static writeFile wrobj = new writeFile();
+
+	public static void encodecompresswrite(String path, String str1) throws IOException {
+		en_str = endeobj.encode(str1);
+		com_str = compressDecompress.compress(en_str);
+		wrobj.writer(path, com_str);
+	}
+
+	public static void decodedecompressread(String path) throws IOException {
+		restr = readFile.reader(path);
+		decom_str = compressDecompress.decompress(restr);
+		de_str = endeobj.decode(decom_str);
+	}
+
+	/*
+	 * public void encodecompresswrite(String path, String str1) { en_str =
+	 * objen.encode(str1); comp_str = objcom.compress(en_str);
+	 * objw.writef(path,comp_str); }
+	 * 
+	 * public void decodedecompressread(String str) { decom_str = objr.read(str);
+	 * de_str = objde.decompress();
+	 * 
+	 * }
+	 */
+
+	public static void main(String[] args) throws IOException {
+		String testStr = "baba_baba_baba_baba_baba_baba_baba_baba_baba_baba_baba_baba_baba_baba_baba_";
+
+		encodecompresswrite(path, testStr);
+		decodedecompressread(path);
 	 }
 }

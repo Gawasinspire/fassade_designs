@@ -1,29 +1,31 @@
 package subsystem;
 
+import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.OutputStream;
-import java.util.zip.DeflaterOutputStream;
-import java.util.zip.InflaterOutputStream;
+import java.io.InputStreamReader;
+import java.util.zip.GZIPInputStream;
+import java.util.zip.GZIPOutputStream;
 
-public class compressDecompress {
-    public static byte[] compress(String text) throws IOException {
-        return compress(text.getBytes());
-    }
+public class compressDecompress 
+{
+	public static byte[] compress(String text) throws IOException {
+		ByteArrayOutputStream obj = new ByteArrayOutputStream();
+        GZIPOutputStream gzip = new GZIPOutputStream(obj);
+        gzip.write(text.getBytes("UTF-8"));
+        gzip.close();
+        return obj.toByteArray();
+	}
 
-    public static byte[] compress(byte[] bArray) throws IOException {
-        ByteArrayOutputStream os = new ByteArrayOutputStream();
-        try (DeflaterOutputStream dos = new DeflaterOutputStream(os)) {
-            dos.write(bArray);
+	public static String decompress(byte[] compressedTxt) throws IOException {
+		GZIPInputStream gis = new GZIPInputStream(new ByteArrayInputStream(compressedTxt));
+		BufferedReader bf = new BufferedReader(new InputStreamReader(gis, "UTF-8"));
+		String outStr = "";
+        String line;
+        while ((line=bf.readLine())!=null) {
+          outStr += line;
         }
-        return os.toByteArray();
-    }
-
-    public static byte[] decompress(byte[] compressedTxt) throws IOException {
-        ByteArrayOutputStream os = new ByteArrayOutputStream();
-        try (OutputStream ios = new InflaterOutputStream(os)) {
-            ios.write(compressedTxt);
-        }
-        return os.toByteArray();
-   }
-}  
+        return outStr;
+	}
+}
